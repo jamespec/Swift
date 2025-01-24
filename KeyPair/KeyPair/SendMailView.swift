@@ -10,14 +10,16 @@ import MessageUI
 
 
 struct SendMailView: View {
-    let keyTag: String
-    private var publicKeyString: String? = nil
+    @AppStorage("email")  private var email: String = "james315@icloud.com"
+
+    let bodyString: String
+    let subject: String
     @State private var showingMailView = false
     @State private var mailServiceUnavailable = false
 
-    init(keyTag: String) {
-        self.keyTag = keyTag
-        publicKeyString = KeyManagement.fetchPublicKeyAsBase64String(forTag: keyTag)
+    init(_ bodyString: String, _ subject: String) {
+        self.bodyString = bodyString
+        self.subject = subject
     }
     
     var body: some View {
@@ -39,9 +41,9 @@ struct SendMailView: View {
         }
         .sheet(isPresented: $showingMailView) {
             MailView(
-                recipients: ["james315@icloud.com"],
-                subject: "Authorization",
-                body: publicKeyString!
+                recipients: [email],
+                subject: subject,
+                body: bodyString
             )
         }
         .alert(isPresented: $mailServiceUnavailable) {
@@ -55,7 +57,7 @@ struct SendMailView: View {
 }
 
 #Preview {
-    SendMailView(keyTag: "com.bny.da.authorizerKey")
+    SendMailView("Sample body text", "Subject")
 }
 
 struct MailView: UIViewControllerRepresentable {

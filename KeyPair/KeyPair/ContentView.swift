@@ -14,18 +14,19 @@ import CoreImage.CIFilterBuiltins
 
 
 struct ContentView: View {
-    private let keyTag = "com.bny.da.authorizerKey"
+    @AppStorage("email")  private var email: String = "james315@icloud.com"
+    @AppStorage("keyTag") private var keyTag: String = "com.bny.da.authorizerKey"
 
     var body: some View {
         VStack(spacing: 20) {
-            Image("90BA458B-E209-42C7-BC6A-0641DA000B66")
-                .resizable()
-                .interpolation(.none)
-                .frame(width: 200, height: 100)
-            Text("Digital Assets").bold().font(.title)
-            Text("Transaction Authorization").bold().padding(0)
-
             NavigationSplitView {
+                Image("90BA458B-E209-42C7-BC6A-0641DA000B66")
+                    .resizable()
+                    .interpolation(.none)
+                        .frame(width: 200, height: 100)
+                Text("Digital Assets").bold().font(.title)
+                Text("Transaction Authorization").bold().padding(0)
+
                 List {
                     NavigationLink {
                         TransactionView(keyTag: keyTag)
@@ -38,12 +39,11 @@ struct ContentView: View {
                         Text("Show PublicKey")
                     }
                     NavigationLink {
-                        SendMailView(keyTag: keyTag)
+                        SettingsView(email: $email, keyTag: $keyTag)
                     } label: {
-                        Text("Email PublicKey")
+                        Text("Settings")
                     }
                 }
-                .navigationTitle("Operations")
             } detail: {
                 Text("Select an Operation")
             }

@@ -37,7 +37,7 @@ struct QRCodeScannerView: UIViewRepresentable {
                metadataObject.type == .qr,
                let scannedValue = metadataObject.stringValue {
                 DispatchQueue.main.async {
-                    self.parent.scannedCode = scannedValue
+                    self.parent.scannedData = scannedValue
                 }
 //                output.metadataObjectsDelegate = nil // Optional: Prevent further detection
                 let session = AVCaptureSession()
@@ -46,7 +46,7 @@ struct QRCodeScannerView: UIViewRepresentable {
         }
     }
 
-    @Binding var scannedCode: String?
+    @Binding var scannedData: String?
     var onScanCompleted: (() -> Void)?
 
     func makeCoordinator() -> Coordinator {
@@ -87,8 +87,8 @@ struct QRCodeScannerView: UIViewRepresentable {
 }
 
 #Preview {
-    @State @Previewable var scannedCode: String?
+    @State @Previewable var scannedData: String?
 
-    QRCodeScannerView(scannedCode: $scannedCode)
+    QRCodeScannerView(scannedData: $scannedData)
 }
 

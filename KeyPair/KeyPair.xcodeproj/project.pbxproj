@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1A5808C82D41BBA1008ECBFA /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 1A5808C72D41BBA1008ECBFA /* SwiftProtobuf */; };
+		1A5808CA2D41BBA1008ECBFA /* WalletCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1A5808C92D41BBA1008ECBFA /* WalletCore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		1A6ECF1B2D1DCBE0003965EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A5808CA2D41BBA1008ECBFA /* WalletCore in Frameworks */,
+				1A5808C82D41BBA1008ECBFA /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +119,8 @@
 			);
 			name = KeyPair;
 			packageProductDependencies = (
+				1A5808C72D41BBA1008ECBFA /* SwiftProtobuf */,
+				1A5808C92D41BBA1008ECBFA /* WalletCore */,
 			);
 			productName = KeyPair;
 			productReference = 1A6ECF0A2D1DCBDB003965EF /* KeyPair.app */;
@@ -195,6 +204,9 @@
 			);
 			mainGroup = 1A6ECF012D1DCBDB003965EF;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				1A5808C62D41BBA1008ECBFA /* XCLocalSwiftPackageReference "WalletCore" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1A6ECF0B2D1DCBDB003965EF /* Products */;
 			projectDirPath = "";
@@ -558,6 +570,24 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		1A5808C62D41BBA1008ECBFA /* XCLocalSwiftPackageReference "WalletCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = WalletCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1A5808C72D41BBA1008ECBFA /* SwiftProtobuf */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftProtobuf;
+		};
+		1A5808C92D41BBA1008ECBFA /* WalletCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WalletCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1A6ECF022D1DCBDB003965EF /* Project object */;
 }

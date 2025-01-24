@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ShowPublicKeyView: View {
     let keyTag: String
+    @State private var publicKeyData: String? = nil
     @State private var publicKeyQRImage: UIImage? = nil
     @State private var keyGenerationError: String? = nil
     @State private var showAlert = false
@@ -16,7 +17,13 @@ struct ShowPublicKeyView: View {
 
     init(keyTag: String) {
         self.keyTag = keyTag
-        _publicKeyQRImage = State(initialValue: createQRCodeFromPublicKey())
+
+        guard let pkString = KeyManagement.fetchPublicKeyAsBase64String(forTag: keyTag) else { return }
+        print("ShowPublicKeyView:init - Loaded: \(pkString)")
+        _publicKeyData = State( initialValue: pkString )
+    
+        guard let qrImage = createQRCodeFromPublicKey(pkString) else { return }
+        _publicKeyQRImage = State(initialValue: qrImage)
     }
     
     var body: some View {
@@ -51,11 +58,16 @@ struct ShowPublicKeyView: View {
                     .alert("Did you read the warning carefully?", isPresented: $showAlert2) {
                         Button("Cancel", role: .cancel) {}
                         Button("Regenerate", role: .destructive) {
+                            print("--- Creating new key ---")
                             if KeyManagement.createAndStoreKeyInSecureEnclave(tag: keyTag) {
-                                publicKeyQRImage = createQRCodeFromPublicKey()
-                                print("Key successfully created and stored in Secure Enclave!")
+                                guard let pkString = KeyManagement.fetchPublicKeyAsBase64String(forTag: keyTag) else {
+                                    print("Failed to create key.")
+                                    return
+                                }
+                                publicKeyData = pkString
+                                publicKeyQRImage = createQRCodeFromPublicKey(pkString)
                             } else {
-                                print("Failed to create key.")
+                                print("!!! Unable to create key in the Secure Enclage !!!")
                             }
                         }
                     } message: {
@@ -65,33 +77,28 @@ struct ShowPublicKeyView: View {
                     .background(Color.red)
                     .foregroundColor(.white)
                     .cornerRadius(10)
-                    
-                    SendMailView(keyTag: keyTag)
+
+                    if let pkData = publicKeyData {
+                        SendMailView(pkData, "Public Key")
+                    }
                 }
             }
             .padding()
         }
-        .navigationTitle("Key Management")
+        .navigationTitle("Public Key")
         .navigationBarTitleDisplayMode(.inline)
     }
-    
-    private func createQRCodeFromPublicKey() -> UIImage? {
-        if let publicKeyString = KeyManagement.fetchPublicKeyAsBase64String(forTag: keyTag) {
-            print("Public key: \(publicKeyString)")
-            
-            let data = Data(publicKeyString.utf8)
-            let filter = CIFilter.qrCodeGenerator()
-            filter.setValue(data, forKey: "inputMessage")
-            
-            guard let outputImage = filter.outputImage else { return nil }
-            
-            let context = CIContext()
-            if let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
-                return UIImage(cgImage: cgImage)
-            }
-        }
+
+    private func createQRCodeFromPublicKey(_ keyData: String) -> UIImage? {
+        let filter = CIFilter.qrCodeGenerator()
+        filter.setValue( Data(keyData.utf8), forKey: "inputMessage")
+
+        guard let outputImage = filter.outputImage else { return nil }
+ 
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return nil }
         
-        return nil
+        return UIImage(cgImage: cgImage)
     }
 }
 
